@@ -1,0 +1,18 @@
+import React from 'react';
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { initializeContract } from "./utils/near";
+
+window.nearInitPromise = initializeContract()
+  .then(() => {
+    ReactDOM.render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>,
+      document.getElementById("root")
+    );
+  })
+  .catch(console.error);
+
+reportWebVitals();

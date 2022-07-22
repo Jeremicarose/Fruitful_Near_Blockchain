@@ -1,0 +1,1 @@
+C:\Users\pc\Documents\farm-fronted\contract\target\wasm32-unknown-unknown\release\libgreeter.rlib: C:\Users\pc\Documents\farm-fronted\contract\src\avocado_product.rs C:\Users\pc\Documents\farm-fronted\contract\src\lib.rs
