@@ -42,7 +42,7 @@ impl AvocadoDisplay {
         let index : u64 = id;
         let ova : AvocadoProduct = self.ova.get(&index).unwrap();
         (ova.price.to_string(), ova.quantity.to_string(), ova.expiration.to_string(), 
-        ova.value_addition, ova.location, ova.variety, ova.farmer.to_string(), self.buyer_list(id),)
+        ova.value_addition, ova.location, ova.variety, ova.farmer.to_string(), self.buyer_list(id.parse::<u64>().unwrap()),)
     }
 
     #[private]
@@ -60,7 +60,7 @@ impl AvocadoDisplay {
     pub fn getovas(&self)  -> Vec<(String, String, String, String, String, String, String, Vec<String>)> {
         let mut ovas: Vec<(String, String, String, String, String,String,String, Vec<String>)> = vec![];
         for g in 1..=self.ova.len(){
-            ovas.push(self.getova(g as u64));
+            ovas.push(self.getova(g.to_string()));
         }
         return ovas;
     }

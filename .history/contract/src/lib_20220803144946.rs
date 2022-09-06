@@ -38,11 +38,11 @@ impl AvocadoDisplay {
            
     }
     //get ova by index
-    pub fn getova(&self, id:u64 ) -> (String,String,String,String,String,String,String,Vec<String>) {
-        let index : u64 = id;
+    pub fn getova(&self, id: String) -> (String,String,String,String,String,String,String,Vec<String>) {
+        let index : u64 = id.parse::<u64>().unwrap();
         let ova : AvocadoProduct = self.ova.get(&index).unwrap();
         (ova.price.to_string(), ova.quantity.to_string(), ova.expiration.to_string(), 
-        ova.value_addition, ova.location, ova.variety, ova.farmer.to_string(), self.buyer_list(id),)
+        ova.value_addition, ova.location, ova.variety, ova.farmer.to_string(), self.buyer_list(id.parse::<u64>().unwrap()),)
     }
 
     #[private]
@@ -60,25 +60,24 @@ impl AvocadoDisplay {
     pub fn getovas(&self)  -> Vec<(String, String, String, String, String, String, String, Vec<String>)> {
         let mut ovas: Vec<(String, String, String, String, String,String,String, Vec<String>)> = vec![];
         for g in 1..=self.ova.len(){
-            ovas.push(self.getova(g as u64));
+            ovas.push(self.getova(g.to_string()));
         }
         return ovas;
     }
 
     #[payable]
-    pub fn buy(&mut self, id:u64){
-        //let amount = "1".parse::<u128>().unwrap() * 10u128.pow(24);
-        let ovas = self.ova.get(&id).unwrap();
-        let deposit = env::attached_deposit();
-        if((ovas.price as f64) * 10.0_f64.powf(24.0)) as u128 <= (deposit){
-            let buyer1 = self.buyer_list(id);
-            if(buyer1.len()+1) as u64 > ovas.quantity {
+    pub fn buy(&mut self, id:String){
+        let amount = "1".parse::<u128>().unwrap() * 10u128.pow(24);
+        let ovas = self.ova.get(&id.parse::<u64>().unwrap()).unwrap();
+        if(ovas.price as u128) * amount <= (env::attached_deposit()){
+            let buyer1 = self.buyer_list(id.parse::<u64>().unwrap());
+            if(buyer1.len()+1) as u8 > ovas.quantity {
                 panic_str(SALES_EXPECTED_ERR);
             }else{
                 Promise::new(ovas.farmer).transfer(env::attached_deposit());
-                let mut buyer = self.buyer.get(&id).unwrap();
+                let mut buyer = self.buyer.get(&id.parse::<u64>().unwrap()).unwrap();
                 buyer.push(&env::signer_account_id());
-                self.buyer.insert(&id, &buyer);
+                self.buyer.insert(&id.parse::<u64>().unwrap(), &buyer);
             }
                 
                 
